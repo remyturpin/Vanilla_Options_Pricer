@@ -6,7 +6,7 @@ import io
 import base64
 
 def black_scholes(S, K, T, r, sigma, option_type="call"):
-    """Calcule le prix d'une option européenne avec Black-Scholes."""
+    """Computes the price of a European option using the Black-Scholes model"""
     d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
     
@@ -30,7 +30,7 @@ def monte_carlo_simulation(S, K, T, r, sigma, option_type, simulations=10000):
     return np.exp(-r * T) * np.mean(payoff)
 
 def greeks(S, K, T, r, sigma, option_type="call"):
-    """Calcule les grecs Delta, Gamma, Vega, Theta, Rho."""
+    """Greeks: Delta, Gamma, Vega, Theta, and Rho."""
     d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
     
@@ -49,7 +49,7 @@ def greeks(S, K, T, r, sigma, option_type="call"):
     }
 
 def generate_plots(S, K, T, r, sigma, option_type):
-    """Génère deux graphiques distincts : option price et grecs vs temps et vs prix du sous-jacent."""
+    """Generates two distinct graphs: option price and Greeks vs. time and vs. underlying price."""
     T_range = np.linspace(0.01, T, 100)
     S_range = np.linspace(S * 0.5, S * 1.5, 100)
     
@@ -59,7 +59,7 @@ def generate_plots(S, K, T, r, sigma, option_type):
     greeks_T = {g: [greeks(S, K, t, r, sigma, option_type)[g] for t in T_range] for g in ["Delta", "Gamma", "Vega", "Theta", "Rho"]}
     greeks_S = {g: [greeks(s, K, T, r, sigma, option_type)[g] for s in S_range] for g in ["Delta", "Gamma", "Vega", "Theta", "Rho"]}
     
-    # Générer le premier graphique (évolution avec le temps)
+    #premier graphique (évolution avec le temps)
     fig, ax = plt.subplots(figsize=(7, 5))
     ax.plot(T_range, prices_T, label='Option Price', linewidth=2)
     for g in greeks_T:
@@ -74,7 +74,7 @@ def generate_plots(S, K, T, r, sigma, option_type):
     plot_url1 = base64.b64encode(img1.getvalue()).decode()
     plt.close()
     
-    # Générer le deuxième graphique (évolution avec le prix du sous-jacent)
+    #deuxième graphique (évolution avec le prix du sous-jacent)
     fig, ax = plt.subplots(figsize=(7, 5))
     ax.plot(S_range, prices_S, label='Option Price', linewidth=2)
     for g in greeks_S:
