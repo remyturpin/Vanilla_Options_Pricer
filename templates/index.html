@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option Pricer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+            <h2 class="text-center mb-4">📈 Option Pricer</h2>
+            <form id="optionForm">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Prix du sous-jacent (S):</label>
+                        <input type="number" class="form-control" id="S" step="0.01" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prix d'exercice (K):</label>
+                        <input type="number" class="form-control" id="K" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Temps à expiration (T en années):</label>
+                        <input type="number" class="form-control" id="T" step="0.01" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Taux sans risque (r):</label>
+                        <input type="number" class="form-control" id="r" step="0.0001" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Volatilité implicite (sigma):</label>
+                        <input type="number" class="form-control" id="sigma" step="0.0001" required>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <label class="form-label">Type d'option :</label>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" name="option_type" value="call" checked class="form-check-input">
+                        <label class="form-check-label">Call</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" name="option_type" value="put" class="form-check-input">
+                        <label class="form-check-label">Put</label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary mt-4 w-100" onclick="calculatePrice()">📊 Calculer</button>
+            </form>
+
+            <div id="result" class="mt-4"></div>
+
+            <!-- Graphiques -->
+            <div class="row mt-4">
+                <div class="col-md-6 text-center">
+                    <h4 class="fw-bold">📉 Prix & Greeks en fonction du temps</h4>
+                    <img id="plot1" src="" class="img-fluid mt-3" style="display: none;"/>
+                </div>
+                <div class="col-md-6 text-center">
+                    <h4 class="fw-bold">📊 Prix & Greeks en fonction du prix du sous-jacent</h4>
+                    <img id="plot2" src="" class="img-fluid mt-3" style="display: none;"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function calculatePrice() {
+            const S = document.getElementById("S").value;
+            const K = document.getElementById("K").value;
+            const T = document.getElementById("T").value;
+            const r = document.getElementById("r").value;
+            const sigma = document.getElementById("sigma").value;
+            const option_type = document.querySelector('input[name="option_type"]:checked').value;
+            
+            const response = await fetch('/price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ S, K, T, r, sigma, option_type })
+            });
+
+            const data = await response.json();
+            document.getElementById("result").innerHTML = `
+                <div class="alert alert-success text-center">
+                    <h3>💰 Comparaison des prix :</h3>
+                    <p><strong>Black-Scholes :</strong> ${data.black_scholes.toFixed(2)} €</p>
+                    <p><strong>Monte Carlo :</strong> ${data.monte_carlo.toFixed(2)} €</p>
+                    <p><strong>Différence :</strong> ${(data.monte_carlo - data.black_scholes).toFixed(2)} €</p>
+                </div>
+                <h4 class="mt-3">📊 Greeks:</h4>
+                <ul class="list-group">
+                    <li class="list-group-item">Delta: ${data.greeks.Delta.toFixed(4)}</li>
+                    <li class="list-group-item">Gamma: ${data.greeks.Gamma.toFixed(4)}</li>
+                    <li class="list-group-item">Vega: ${data.greeks.Vega.toFixed(4)}</li>
+                    <li class="list-group-item">Theta: ${data.greeks.Theta.toFixed(4)}</li>
+                    <li class="list-group-item">Rho: ${data.greeks.Rho.toFixed(4)}</li>
+                </ul>
+            `;
+            
+            // Mise à jour des images pour afficher 2 graphiques distincts
+            document.getElementById("plot1").src = `data:image/png;base64,${data.plot_url1}`;
+            document.getElementById("plot1").style.display = "block";
+            document.getElementById("plot2").src = `data:image/png;base64,${data.plot_url2}`;
+            document.getElementById("plot2").style.display = "block";
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
