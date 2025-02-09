@@ -1,6 +1,6 @@
-###  Vanilla Options Pricer
+#  Vanilla Options Pricer
 
-#  Features
+##  Features
 This Vanilla Options Pricer is a good tool to compare monte carlo and black and scholes option prices with some graphs.
 It is realized with Flask and Python to integrate HTML transforming it in a web app, the design is realized in CSS.
 
@@ -13,7 +13,7 @@ It is realized with Flask and Python to integrate HTML transforming it in a web 
 - **Built as a web application using Flask** with a user-friendly interface.
 - **Styled with CSS** for enhanced UI design.
 
-# Code and libraries used
+## Code and libraries used
 - **Flask**: Web framework for building the API and front-end interface.
 - **NumPy**: Used for numerical computations, including Monte Carlo simulations.
 - **SciPy**: Utilized for statistical functions such as cumulative distribution in Black-Scholes.
