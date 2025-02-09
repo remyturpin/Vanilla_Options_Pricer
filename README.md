@@ -1,4 +1,4 @@
-##  Vanilla Options Pricer
+###  Vanilla Options Pricer
 
 #  Features
 This Vanilla Options Pricer is a good tool to compare monte carlo and black and scholes option prices with some graphs.
