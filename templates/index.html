@@ -9,36 +9,36 @@
 <body class="bg-light">
     <div class="container mt-5">
         <div class="card shadow p-4">
-            <h2 class="text-center mb-4">📈 Option Pricer</h2>
+            <h2 class="text-center mb-4">Option Pricer</h2>
             <form id="optionForm">
                 <div class="row">
                     <div class="col-md-6">
-                        <label class="form-label">Prix du sous-jacent (S):</label>
+                        <label class="form-label">Underlying Price (S):</label>
                         <input type="number" class="form-control" id="S" step="0.01" required>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Prix d'exercice (K):</label>
+                        <label class="form-label">Strike Price (K):</label>
                         <input type="number" class="form-control" id="K" step="0.01" required>
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <label class="form-label">Temps à expiration (T en années):</label>
+                        <label class="form-label">time to expiration (T en années):</label>
                         <input type="number" class="form-control" id="T" step="0.01" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Taux sans risque (r):</label>
+                        <label class="form-label">Risk-Free Rate (r):</label>
                         <input type="number" class="form-control" id="r" step="0.0001" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Volatilité implicite (sigma):</label>
+                        <label class="form-label">Implied Volatility (sigma):</label>
                         <input type="number" class="form-control" id="sigma" step="0.0001" required>
                     </div>
                 </div>
 
                 <div class="mt-3">
-                    <label class="form-label">Type d'option :</label>
+                    <label class="form-label">Option Type :</label>
                     <div class="form-check form-check-inline">
                         <input type="radio" name="option_type" value="call" checked class="form-check-input">
                         <label class="form-check-label">Call</label>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary mt-4 w-100" onclick="calculatePrice()">📊 Calculer</button>
+                <button type="button" class="btn btn-primary mt-4 w-100" onclick="calculatePrice()">Calculer</button>
             </form>
 
             <div id="result" class="mt-4"></div>
@@ -57,11 +57,11 @@
             <!-- Graphiques -->
             <div class="row mt-4">
                 <div class="col-md-6 text-center">
-                    <h4 class="fw-bold">📉 Prix & Greeks en fonction du temps</h4>
+                    <h4 class="fw-bold">Price & Greeks as a function of time</h4>
                     <img id="plot1" src="" class="img-fluid mt-3" style="display: none;"/>
                 </div>
                 <div class="col-md-6 text-center">
-                    <h4 class="fw-bold">📊 Prix & Greeks en fonction du prix du sous-jacent</h4>
+                    <h4 class="fw-bold">Price & Greeks as a function of the underlying price</h4>
                     <img id="plot2" src="" class="img-fluid mt-3" style="display: none;"/>
                 </div>
             </div>
@@ -86,12 +86,12 @@
             const data = await response.json();
             document.getElementById("result").innerHTML = `
                 <div class="alert alert-success text-center">
-                    <h3>💰 Comparaison des prix :</h3>
+                    <h3>Comparaison des prix :</h3>
                     <p><strong>Black-Scholes :</strong> ${data.black_scholes.toFixed(2)} €</p>
                     <p><strong>Monte Carlo :</strong> ${data.monte_carlo.toFixed(2)} €</p>
                     <p><strong>Différence :</strong> ${(data.monte_carlo - data.black_scholes).toFixed(2)} €</p>
                 </div>
-                <h4 class="mt-3">📊 Greeks:</h4>
+                <h4 class="mt-3">Greeks:</h4>
                 <ul class="list-group">
                     <li class="list-group-item">Delta: ${data.greeks.Delta.toFixed(4)}</li>
                     <li class="list-group-item">Gamma: ${data.greeks.Gamma.toFixed(4)}</li>
@@ -101,7 +101,7 @@
                 </ul>
             `;
             
-            // Mise à jour des images pour afficher 2 graphiques distincts
+            // display two distinct charts
             document.getElementById("plot1").src = `data:image/png;base64,${data.plot_url1}`;
             document.getElementById("plot1").style.display = "block";
             document.getElementById("plot2").src = `data:image/png;base64,${data.plot_url2}`;
